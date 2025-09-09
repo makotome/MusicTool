@@ -1,0 +1,134 @@
+# Python 相关
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# 虚拟环境
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# IDE 相关
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# macOS 系统文件
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon?
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+# Windows 系统文件
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# 音频文件
+*.mp3
+*.flac
+*.wav
+*.m4a
+*.m4s
+*.aac
+*.ogg
+*.wma
+*.aiff
+*.au
+*.ra
+*.3gp
+
+# 音频相关目录
+mp3_output/
+wav_output/
+flac_output/
+m4a_output/
+audio_output/
+output/
+converted/
+split/
+donglihuoche1/
+CD*/
+
+# CUE 和音频项目文件
+*.cue
+*.log
+*.cdg
+*.bin
+*.img
+*.nrg
+*.mds
+*.mdf
+
+# 日志文件
+*.log
+conversion.log
+m4s_conversion.log
+flac_conversion.log
+split.log
+
+# 临时文件
+*.tmp
+*.temp
+*.bak
+*.backup
+*~
+*.orig
+
+# 压缩文件（可能包含音频）
+*.zip
+*.rar
+*.7z
+*.tar.gz
+*.tar.bz2
+*.tar.xz
+
+# FFmpeg 临时文件
+ffmpeg2pass-*.log
+
+# 音频标签缓存
+*.tag
+*.tags
+
+# 测试输出
+test_output/
+sample_output/
+
+# 大文件（通常是音频相关）
+*.iso
+*.dmg
