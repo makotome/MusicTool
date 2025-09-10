@@ -1,0 +1,22 @@
+services:
+  music-tool:
+    image: musictool:latest  # 使用本地镜像
+    container_name: music-tool-web
+    ports:
+      - "5001:5000"    # Web 界面端口
+    volumes:
+      # 本地目录挂载
+      - ./input:/app/input          # 输入文件目录
+      - ./output:/app/output        # 输出文件目录
+      - ./temp:/app/temp           # 临时文件目录
+      - ./uploads:/app/uploads     # 上传文件目录
+      # 可以挂载其他音频目录
+      - ./samples:/app/samples     # 示例文件目录
+    environment:
+      - PYTHONPATH=/app
+      - PYTHONIOENCODING=utf-8
+      - FLASK_APP=web_app.py
+      - FLASK_ENV=production
+      - TZ=Asia/Shanghai            # 设置时区
+    restart: unless-stopped
+    working_dir: /app

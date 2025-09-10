@@ -1,5 +1,9 @@
 # 忽略不需要打包到镜像中的文件和目录
 
+# Docker 镜像文件
+*.tar
+*.tar.gz
+
 # Git 相关
 .git
 .gitignore

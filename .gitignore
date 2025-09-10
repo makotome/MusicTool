@@ -132,3 +132,12 @@ sample_output/
 # 大文件（通常是音频相关）
 *.iso
 *.dmg
+
+# 压缩文件
+*.tar
+*.tar.gz
+*.tar.bz2
+*.tar.xz
+*.zip
+*.rar
+*.7z
