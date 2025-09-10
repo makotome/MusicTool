@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>音乐处理工具 - Web 界面</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .container-main {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+            padding: 2rem;
+        }
+
+        .tool-card {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            border: none;
+            border-radius: 15px;
+            color: white;
+            transition: transform 0.3s ease;
+            cursor: pointer;
+            margin-bottom: 1rem;
+        }
+
+        .tool-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .tool-card.flac {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .tool-card.m4s {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .file-drop-zone {
+            border: 2px dashed #ccc;
+            border-radius: 10px;
+            padding: 3rem;
+            text-align: center;
+            background: #f8f9fa;
+            margin: 1rem 0;
+            transition: all 0.3s ease;
+        }
+
+        .file-drop-zone.dragover {
+            border-color: #007bff;
+            background: #e3f2fd;
+        }
+
+        .file-list {
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 1rem;
+            background: white;
+        }
+
+        .file-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .file-item:last-child {
+            border-bottom: none;
+        }
+
+        .progress-container {
+            display: none;
+            margin-top: 1rem;
+        }
+
+        .task-status {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .task-status.pending {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+        }
+
+        .task-status.running {
+            background: #cce5ff;
+            border: 1px solid #74b9ff;
+        }
+
+        .task-status.completed {
+            background: #d4edda;
+            border: 1px solid #00b894;
+        }
+
+        .task-status.failed {
+            background: #f8d7da;
+            border: 1px solid #e17055;
+        }
+
+        .header-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .feature-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 25px;
+            padding: 0.75rem 2rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .modal-content {
+            border-radius: 15px;
+            border: none;
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px 15px 0 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="container-main">
+            <!-- 头部 -->
+            <div class="text-center mb-5">
+                <div class="header-icon">
+                    <i class="fas fa-music"></i>
+                </div>
+                <h1 class="display-4 fw-bold">音乐处理工具</h1>
+                <p class="lead text-muted">简单易用的音频文件处理平台</p>
+            </div>
+
+            <!-- 功能选择 -->
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <div class="card tool-card flac h-100" onclick="selectTool('flac')">
+                        <div class="card-body text-center">
+                            <div class="feature-icon">
+                                <i class="fas fa-cut"></i>
+                            </div>
+                            <h4 class="card-title">音频分割</h4>
+                            <p class="card-text">根据 CUE 文件自动分割多种音频格式</p>
+                            <div class="small">
+                                <i class="fas fa-check-circle me-2"></i>支持 FLAC、WAV 格式<br>
+                                <i class="fas fa-check-circle me-2"></i>完美中文支持<br>
+                                <i class="fas fa-check-circle me-2"></i>保留原始音质<br>
+                                <i class="fas fa-clock me-2 text-warning"></i>计划支持 APE、MP3、OGG
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card tool-card m4s h-100" onclick="selectTool('m4s')">
+                        <div class="card-body text-center">
+                            <div class="feature-icon">
+                                <i class="fas fa-exchange-alt"></i>
+                            </div>
+                            <h4 class="card-title">M4S 转 MP3</h4>
+                            <p class="card-text">批量转换 M4S 文件为 MP3 格式</p>
+                            <div class="small">
+                                <i class="fas fa-check-circle me-2"></i>高质量输出<br>
+                                <i class="fas fa-check-circle me-2"></i>完美中文支持<br>
+                                <i class="fas fa-check-circle me-2"></i>错误恢复
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 工具操作区域 -->
+            <div id="tool-workspace" style="display: none;">
+                <div class="row">
+                    <div class="col-md-8">
+                        <!-- 文件选择区域 -->
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h5 class="mb-0">
+                                    <i class="fas fa-folder me-2"></i>
+                                    <span id="tool-title">选择文件</span>
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <!-- 文件上传 -->
+                                <div class="file-drop-zone" id="file-drop-zone">
+                                    <i class="fas fa-cloud-upload-alt fa-3x text-muted mb-3"></i>
+                                    <h5>拖拽文件到这里或点击选择</h5>
+                                    <p class="text-muted">支持多文件选择</p>
+                                    <input type="file" id="file-input" multiple style="display: none;">
+                                    <button class="btn btn-outline-primary"
+                                        onclick="document.getElementById('file-input').click()">
+                                        <i class="fas fa-plus me-2"></i>选择文件
+                                    </button>
+                                </div>
+
+                                <!-- 上传进度 -->
+                                <div id="upload-progress-container" style="display: none;" class="mt-3">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <span class="text-muted">上传进度</span>
+                                        <span id="upload-progress-text">0%</span>
+                                    </div>
+                                    <div class="progress">
+                                        <div id="upload-progress-bar"
+                                            class="progress-bar progress-bar-striped progress-bar-animated"
+                                            role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0"
+                                            aria-valuemax="100">
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+                                <!-- 已选择的文件 -->
+                                <div id="selected-files-container" style="display: none;">
+                                    <h6 class="mt-3">已选择的文件</h6>
+                                    <div id="selected-files" class="file-list"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 输出设置 -->
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h5 class="mb-0">
+                                    <i class="fas fa-cog me-2"></i>输出设置
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <label for="output-dir" class="form-label">输出目录</label>
+                                    <input type="text" class="form-control" id="output-dir" value="/app/output"
+                                        readonly>
+                                    <div class="form-text">处理后的文件将保存到此目录</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 开始处理 -->
+                        <div class="text-center">
+                            <button id="start-processing" class="btn btn-primary btn-lg" onclick="startProcessing()"
+                                disabled>
+                                <i class="fas fa-play me-2"></i>开始处理
+                            </button>
+                        </div>
+
+                        <!-- 进度显示 -->
+                        <div id="progress-container" class="progress-container">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="mb-0">
+                                        <i class="fas fa-tasks me-2"></i>处理进度
+                                    </h5>
+                                </div>
+                                <div class="card-body">
+                                    <div id="task-status" class="task-status">
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <span id="task-message">准备中...</span>
+                                            <span id="task-progress-text">0%</span>
+                                        </div>
+                                        <div class="progress">
+                                            <div id="task-progress-bar" class="progress-bar" role="progressbar"
+                                                style="width: 0%"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 侧边栏 -->
+                    <div class="col-md-4">
+                        <!-- 系统信息 -->
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h5 class="mb-0">
+                                    <i class="fas fa-info-circle me-2"></i>系统信息
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div id="system-info">
+                                    <div class="text-center text-muted">
+                                        <i class="fas fa-spinner fa-spin"></i> 加载中...
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 任务历史 -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0">
+                                    <i class="fas fa-history me-2"></i>任务历史
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div id="task-history">
+                                    <div class="text-center text-muted">
+                                        暂无任务记录
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 成功模态框 -->
+    <div class="modal fade" id="successModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-check-circle me-2"></i>处理完成
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p>文件处理成功完成！</p>
+                    <div id="success-details"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">确定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 错误模态框 -->
+    <div class="modal fade" id="errorModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title">
+                        <i class="fas fa-exclamation-triangle me-2"></i>处理失败
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p>文件处理过程中出现错误：</p>
+                    <div id="error-details" class="alert alert-danger"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+
+</html>

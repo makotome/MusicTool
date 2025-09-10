@@ -1,8 +1,25 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-音频切割工具
-支持FLAC和WAV音频文件，配合CUE文件进行切割
+音频分割工具 (Audio Splitter)
+支持多种音频格式的分割，配合CUE文件进行精确切割
+
+当前支持的格式:
+- FLAC (无损音频)
+- WAV (无损音频)
+
+计划支持的格式:
+- APE (Monkey's Audio)
+- MP3 (有损音频)
+- OGG (有损音频)
+- M4A (有损音频)
+
+使用方法:
+    python audio_splitter.py [目录路径]
+    
+示例:
+    python audio_splitter.py                    # 在当前目录查找文件
+    python audio_splitter.py /path/to/music     # 在指定目录查找文件
 """
 
 import os
@@ -181,20 +198,36 @@ def split_audio_with_ffmpeg(audio_file, tracks, output_dir="output"):
     return True
 
 def find_files_in_directory(directory="."):
-    """在目录中查找FLAC/WAV和CUE文件"""
-    flac_files = list(Path(directory).glob("*.flac"))
-    wav_files = list(Path(directory).glob("*.wav"))
-    audio_files = flac_files + wav_files
+    """在目录中查找支持的音频文件和CUE文件"""
+    # 当前支持的格式
+    supported_formats = {
+        'flac': '*.flac',
+        'wav': '*.wav',
+        # 'ape': '*.ape',    # 计划支持
+        # 'mp3': '*.mp3',    # 计划支持  
+        # 'ogg': '*.ogg',    # 计划支持
+        # 'm4a': '*.m4a',    # 计划支持
+    }
+    
+    audio_files = []
+    format_counts = {}
+    
+    # 查找各种格式的音频文件
+    for format_name, pattern in supported_formats.items():
+        files = list(Path(directory).glob(pattern))
+        audio_files.extend(files)
+        format_counts[format_name] = len(files)
+    
     cue_files = list(Path(directory).glob("*.cue"))
     
     print(f"在目录 {directory} 中找到:")
-    print(f"  FLAC文件: {len(flac_files)} 个")
-    for f in flac_files:
-        print(f"    {f.name}")
-    
-    print(f"  WAV文件: {len(wav_files)} 个")
-    for f in wav_files:
-        print(f"    {f.name}")
+    for format_name, count in format_counts.items():
+        if count > 0:
+            format_upper = format_name.upper()
+            print(f"  {format_upper}文件: {count} 个")
+            format_files = [f for f in audio_files if f.suffix.lower() == f'.{format_name}']
+            for f in format_files:
+                print(f"    {f.name}")
     
     print(f"  CUE文件: {len(cue_files)} 个")
     for f in cue_files:
@@ -204,7 +237,7 @@ def find_files_in_directory(directory="."):
 
 def main():
     """主函数"""
-    print("音频切割工具 (支持FLAC/WAV)")
+    print("音频分割工具 (支持FLAC/WAV)")
     print("=" * 40)
     
     # 如果提供了命令行参数
@@ -212,6 +245,34 @@ def main():
         audio_file = sys.argv[1]
         cue_file = sys.argv[2]
         output_dir = sys.argv[3] if len(sys.argv) > 3 else "切割后的歌曲"
+        
+        print(f"使用命令行参数:")
+        print(f"  音频文件: {audio_file}")
+        print(f"  CUE文件: {cue_file}")
+        print(f"  输出目录: {output_dir}")
+    elif len(sys.argv) == 2:
+        # 如果只提供了一个参数，作为工作目录
+        work_directory = sys.argv[1]
+        print(f"正在目录 {work_directory} 中查找文件...")
+        audio_files, cue_files = find_files_in_directory(work_directory)
+        
+        if not audio_files:
+            print("❌ 未找到音频文件（FLAC或WAV）")
+            return
+        
+        if not cue_files:
+            print("❌ 未找到CUE文件")
+            return
+        
+        # 选择第一个找到的文件
+        audio_file = str(audio_files[0])
+        cue_file = str(cue_files[0])
+        output_dir = os.path.join(work_directory, "切割后的歌曲")
+        
+        print(f"\n使用文件:")
+        print(f"  音频文件: {audio_file}")
+        print(f"  CUE文件: {cue_file}")
+        print(f"  输出目录: {output_dir}")
     else:
         # 自动查找文件
         print("正在当前目录查找文件...")
@@ -233,6 +294,7 @@ def main():
         print(f"\n使用文件:")
         print(f"  音频文件: {audio_file}")
         print(f"  CUE文件: {cue_file}")
+        print(f"  输出目录: {output_dir}")
     
     # 检查文件是否存在
     if not os.path.exists(audio_file):

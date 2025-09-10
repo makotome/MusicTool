@@ -5,3 +5,8 @@ chardet>=5.0.0       # 字符编码检测
 
 # M4S to MP3 转换工具所需依赖
 # 注意：pydub 需要 ffmpeg 支持来处理各种音频格式
+
+# Web 界面依赖
+flask>=2.3.0         # Web 框架
+flask-cors>=4.0.0    # 跨域支持
+werkzeug>=2.3.0      # WSGI 工具库
