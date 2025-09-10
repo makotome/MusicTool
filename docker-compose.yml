@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  music-tool:
+    build: .
+    container_name: music-tool-container
+    volumes:
+      # 将宿主机的目录挂载到容器中
+      - ./input:/app/input          # 输入文件目录
+      - ./output:/app/output        # 输出文件目录
+      - ./temp:/app/temp           # 临时文件目录
+      # 如果需要处理现有的音频文件，可以挂载更多目录
+      - ./m4s:/app/m4s             # M4S 文件目录
+      - ./donglihuoche1:/app/donglihuoche1  # FLAC 文件目录
+    environment:
+      - PYTHONPATH=/app
+      - PYTHONIOENCODING=utf-8
+    stdin_open: true     # 保持 STDIN 开放
+    tty: true           # 分配伪终端
+    working_dir: /app
+    command: /bin/bash   # 启动后进入交互式 bash

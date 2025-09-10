@@ -1,0 +1,77 @@
+# 忽略不需要打包到镜像中的文件和目录
+
+# Git 相关
+.git
+.gitignore
+*.git
+
+# 音频文件目录（这些通过挂载提供）
+donglihuoche1/
+m4s/
+mp3_output/
+wav_output/
+CD2/
+input/
+output/
+temp/
+
+# 音频文件
+*.flac
+*.mp3
+*.wav
+*.m4s
+*.cue
+
+# Python 缓存
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.py[cod]
+*$py.class
+
+# 环境和配置
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# IDE 和编辑器
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# 日志文件
+*.log
+
+# 系统文件
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# 临时文件
+*.tmp
+*.temp
+
+# 文档和说明（除了必要的）
+*.md
+!README.md
+
+# 测试文件
+test_*
+*_test.py
+
+# Docker 相关
+Dockerfile
+docker-compose.yml
+.dockerignore

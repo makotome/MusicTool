@@ -148,7 +148,36 @@ python convert_m4s.py
 - **音质保持**: 使用高质量编码保持音频品质
 - **自动化工作流**: 集成到音乐管理系统中
 
-## 🔧 技术特性
+## � Docker 部署
+
+本项目支持 Docker 容器化部署，一键启动即可使用！
+
+### 快速开始
+
+```bash
+# 1. 构建并启动容器
+./docker-manage.sh build
+./docker-manage.sh start
+
+# 2. 进入容器使用工具
+./docker-manage.sh shell
+
+# 3. 或直接运行工具
+./docker-manage.sh flac    # FLAC 分割
+./docker-manage.sh m4s     # M4S 转换
+```
+
+### Docker 优势
+
+- ✅ **零依赖安装**: 无需手动安装 Python、FFmpeg 等依赖
+- ✅ **环境隔离**: 不影响宿主机环境
+- ✅ **跨平台**: 支持 Windows、macOS、Linux
+- ✅ **一键部署**: 简化的部署和使用流程
+- ✅ **数据持久化**: 处理结果自动保存到宿主机
+
+详细说明请参考: [DOCKER_USAGE.md](DOCKER_USAGE.md)
+
+## �🔧 技术特性
 
 - **多格式支持**: FLAC, WAV, M4S, MP3 等
 - **编码检测**: 自动检测和处理各种字符编码
@@ -156,6 +185,7 @@ python convert_m4s.py
 - **日志记录**: 详细的操作日志和进度跟踪
 - **跨平台**: 支持 Windows, macOS, Linux
 - **高性能**: 使用 FFmpeg 确保处理速度和质量
+- **容器化**: Docker 支持，简化部署和使用
 
 ## 📝 开发计划
 
